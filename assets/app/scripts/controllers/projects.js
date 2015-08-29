@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ProjectsController', function ($scope, $route, $timeout, $filter, DataService, AuthService, Logger, hashSizeFilter) {
+  .controller('ProjectsController', function ($scope, $route, $timeout, $filter, $location, DataService, AuthService, Logger, hashSizeFilter) {
     $scope.projects = {};
     $scope.alerts = $scope.alerts || {};
     $scope.showGetStarted = false;
@@ -73,6 +73,17 @@ angular.module('openshiftConsole')
       DataService.list("projects", $scope, function(projects) {
         $scope.projects = projects.by("metadata.name");
         $scope.showGetStarted = hashSizeFilter($scope.projects) === 0;
+
+        // if projectToDelete is in URL and if project exists to be deleted
+        if ($location.search()['projectToDelete']) {
+          var project = $scope.projects[$location.search()['projectToDelete']];
+          if (project && project.status.phase !== 'Active') {
+            $scope.alerts[$location.search()['projectToDelete']] = {
+              type: "success",
+              message: "Project " + $filter('displayName')(project) + " was marked for deletion."
+            };
+          }
+        }
       });
     });
 
