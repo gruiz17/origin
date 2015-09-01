@@ -1,22 +1,29 @@
 <div ng-controller="ProjectController" class="content">
   <project-page>
     <div ng-controller="SettingsController">
-      <div class="page-header">
+      <div class="page-header page-header-bleed-right">
+        <div class="actions action-button pull-right">
+          <i class="fa fa-trash-o fa-2x" 
+            ng-click="openDeleteModal()"
+            ng-if="!deletingMap[project.metadata.name] && !confirmingMap[project.metadata.name]" 
+            data-toggle="tooltip" 
+            data-placement="left" 
+            title="Delete Project"></i>
+        </div>
         <h1>Project Settings</h1>
-        <div class="btn btn-default btn-large pull-right" style="margin-top:-36px;" ng-click="openDeleteModal();">Delete Project</div>
       </div>
 
       <!-- delete project modal -->
       <script type="text/ng-template" id="delete-project.html">
-        <div class="modal-body" style="font-size:15px;margin-bottom:-20px;">
-            Are you sure you want to delete the project '{{$parent.project | displayName}}'?
-        </div>
-        <div class="modal-body" style="font-size:15px;margin-bottom:-20px;">
-            This will delete all resources associated with the project and cannot be undone.  Make sure this is something you really want to do!
-        </div>
-        <div class="modal-footer" style="text-align:left;">
-            <button class="btn btn-danger" type="button" ng-click="deleteProject();">Delete</button>
-            <button class="btn" type="button" ng-click="cancelDelete();">Cancel</button>
+        <div class="modal-project-delete">
+          <div class="modal-body">
+            <h1>Are you sure you want to delete the project '<strong>{{$parent.project | displayName}}</strong>'?</h1>
+            <p>This will <strong>delete all resources</strong> associated with the project {{$parent.project | displayName}} and <strong>cannot be undone</strong>.  Make sure this is something you really want to do!</p>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-lg btn-danger" type="button" ng-click="deleteProject();">Delete this project</button>
+              <button class="btn btn-lg btn-default" type="button" ng-click="cancelDelete();">Cancel</button>
+          </div>
         </div>
       </script>
       <!-- /delete project modal -->
