@@ -14,6 +14,7 @@
           <div class="muted" style="margin-top: -5px;" ng-if="project | description">
             <truncate-long-text content="project | description" limit="512" use-word-boundary="true"></truncate-long-text>
           </div>
+<<<<<<< HEAD
         </div>
         <div row main-axis="end" ng-if="project.status.phase == 'Active'">
           <i class="fa fa-trash-o fa-2x action-button"
@@ -21,6 +22,14 @@
             data-toggle="tooltip"
             data-placement="left"
             title="Delete Project"></i>
+=======
+        </div>    
+        <div row flex main-axis="end" ng-if="project.status.phase == 'Active'">
+          <delete-button resource-type="project" 
+                         resource-name="{{project.metadata.name}}" 
+                         alerts="alerts" 
+                         display-name="{{(project | displayName)}}"></delete-button>
+>>>>>>> 1fd3469... implement deletion of all resources by using directive
         </div>
       </div>
     </div>
