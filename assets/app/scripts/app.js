@@ -9,6 +9,7 @@
  *
  * Main module of the application.
  */
+
 angular
   .module('openshiftConsole', [
     'ngAnimate',
@@ -17,6 +18,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'ngScalr',
     'openshiftUI',
     'kubernetesUI',
     'ui.bootstrap'
@@ -91,6 +93,16 @@ angular
     tab.icon = "sliders";
     tabs.push(tab);
 
+    tab = builder.create()
+     .id(builder.join(pluginName, "scalr"))
+     .title(function () { return "Scalr"; })
+     .template(template)
+     .href(projectHref("scalr"))
+     .page(function () { return builder.join(templatePath, 'scalr.html'); })
+     .build();
+    tab.icon = "database";
+    tabs.push(tab);
+
   }])
   .config(function ($routeProvider) {
     $routeProvider
@@ -112,6 +124,9 @@ angular
       })
       .when('/project/:project/settings', {
         templateUrl: 'views/settings.html'
+      })
+      .when('/project/:project/scalr', {
+        templateUrl: 'views/scalr.html'
       })
       .when('/project/:project/browse', {
         redirectTo: function(params) {
