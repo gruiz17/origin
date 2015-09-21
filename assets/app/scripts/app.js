@@ -77,6 +77,7 @@ angular
       .subPath("Image Streams", "images", builder.join(templatePath, 'images.html'))
       .subPath("Pods", "pods", builder.join(templatePath, 'pods.html'))
       .subPath("Services", "services", builder.join(templatePath, 'services.html'))
+      .subPath("Routes", "routes", builder.join(templatePath, 'routes.html'))
       .build();
     tab.icon = "sitemap";
     tabs.push(tab);
@@ -132,6 +133,9 @@ angular
       })
       .when('/project/:project/browse/pods', {
         templateUrl: 'views/pods.html'
+      })
+      .when('/project/:project/browse/routes', {
+        templateUrl: 'views/routes.html'
       })
       .when('/project/:project/browse/services', {
         templateUrl: 'views/services.html'
