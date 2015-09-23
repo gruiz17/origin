@@ -4,6 +4,21 @@
       <div class="page-header page-header-bleed-right">
         <h1>Routes</h1>
       </div>
+      <alerts alerts="alerts"></alerts>
+	  <div ng-repeat="route in routes" class="tile">
+        <h2>
+	        <h3 id="route-{{route.metadata.name}}">
+	          {{route.metadata.name}}
+	          <delete-button resource-type="route" resource-name="{{route.metadata.name}}" alerts="alerts"></delete-button>   
+	          <span class="tile-timestamp" style="margin-right: 10px;">Created <relative-timestamp timestamp="route.metadata.creationTimestamp"></relative-timestamp></span>
+	        </h3>
+	        <div>Host: {{route.spec.host}}
+	        </div>
+
+ <!--          <delete-button resource-type="route" resource-name="{{route.metadata.name}}" alerts="alerts"></delete-button> -->
+
+        </h2>
+      </div>
     </div>
   </project-page>
 </div>

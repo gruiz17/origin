@@ -29,7 +29,8 @@ angular.module("openshiftConsole")
           'service': 'Service',
           'buildconfig': 'Build Config',
           'deploymentconfig': 'Deployment Config',
-          'project': 'Project'
+          'project': 'Project',
+          'route': 'Route'
         };
 
         scope.openDeleteModal = function() {
