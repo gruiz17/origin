@@ -17,8 +17,14 @@
 @btn-flat-border-color: #e7e7e7;
 @connector-color: #e0e0e0;
 @console-panel-color: #fff;
+
 @console-bright-blue: #00a8e1;
 @console-dark-blue: #006e9c;
+
+@console-symantec-orange: #EE681A;
+@console-symantec-yellow: #FBB430;
+@console-symantec-brighter-yellow: #FCE024;
+
 @console-text-color-default: @gray-dark;
 @font-size-base: 13px;
 @navbar-os-bg-color: #34383c;
@@ -30,8 +36,8 @@
 @navbar-os-project-menu-border: 1px solid @btn-default-border;
 @navbar-os-project-menu-color: #333;
 @navbar-project-input-height: 41px;
-@osc-object-active-color: @console-bright-blue;
-@osc-object-hover-color: rgba(0, 168, 225, 0.5);
+@osc-object-active-color: @console-symantec-yellow;
+@osc-object-hover-color: @console-symantec-brighter-yellow;
 @osc-object-box-shadow: 0 0 0 1px @connector-color;
 @pod-failed-bg: #EEECEC;
 @pod-failed-border: 2px solid @brand-danger;
@@ -44,7 +50,7 @@
 @sidebar-os-hover-bg: darken(@sidebar-os-bg, 3%);
 @sidebar-os-padding-x: 15px;
 @sidebar-os-padding-y: 10px;
-@sidebar-os-active: @console-bright-blue;
+@sidebar-os-active: @console-symantec-yellow;
 @sidebar-os-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1) all;
 @sidebar-left-width-lg: 160px;
 @sidebar-left-width-md: 100px;
@@ -62,6 +68,39 @@
 @tooltip-bg: #111;
 
 // Bootstrap overrides
+@brand-primary: @console-symantec-yellow;
+
+@btn-primary-bg: lighten(#FCBF0B, 10%);
+@btn-primary-border: darken(@btn-primary-bg, 5%);
+
+@dropdown-link-hover-bg: lighten(@console-symantec-brighter-yellow, 30%);
+@dropdown-link-active-bg: lighten(@console-symantec-brighter-yellow, 30%);
+@dropdown-link-active-color: lighten(@console-symantec-brighter-yellow, 30%);
+@dropdown-link-active-border-color: lighten(@console-symantec-brighter-yellow, 20%);
+@dropdown-link-hover-border-color: lighten(@console-symantec-brighter-yellow, 20%);
+
+.dropdown-menu > a {
+  background-color: @dropdown-link-active-color;
+}
+
+// patternfly overrides
+@btn-primary-bg-img-start: darken(@brand-primary, 5%);
+@btn-primary-bg-img-stop: darken(@btn-primary-bg, 5%);
+@table-border-hover: #ddd;
+@font-family-base: "Symantec Sans-Light", "Open Sans", Helvetica, Arial, sans-serif;
+
+@dropdown-link-active-border-color: lighten(@console-symantec-yellow, 20%);
+@dropdown-link-hover-border-color: lighten(@console-symantec-brighter-yellow, 30%);
+// /patternfly overrides
+
+
+@link-color: lighten(@console-symantec-orange, 10%);
+@link-hover-color: darken(@link-color, 15%);
+@table-bg-hover: lighten(@console-symantec-brighter-yellow, 30%);
+
+@font-family-sans-serif: "Symantec Sans-Light";
+@font-family-serif: "Symantec Serif";
+
 @body-bg: #f6f6f6;
 @page-header-border-color: lighten(@navbar-os-project-border-color, 6%);
 
