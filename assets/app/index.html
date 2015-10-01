@@ -44,17 +44,17 @@
         </a>
       </div>
       <div class="collapse navbar-collapse navbar-collapse-1">  
-        <ul class="nav navbar-nav navbar-utility">
-          <li>
-            <a href="http://docs.openshift.org/latest/welcome/index.html">
+        <ul class="nav navbar-nav navbar-utility" style="height:100%">
+          <li style="height:100%">
+            <a href="http://docs.openshift.org/latest/welcome/index.html" style="padding-top:20px;padding-bottom:20px">
             <span class="fa fa-files-o fa-fw"></span> Documentation</a>
           </li>
-          <li class="dropdown" ng-if="user">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="pficon pficon-user"></span>
+          <li style="height:100%" class="dropdown" ng-if="user">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;padding-bottom:20px">
+              <span class="pficon pficon-user" style="padding-top:12px;"></span>
               <span class="username">{{user.fullName || user.metadata.name}}</span> <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="top:100%">
               <!--
               <li>
                 <a href="#">Account</a>
