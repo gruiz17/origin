@@ -9,6 +9,7 @@
 angular.module('openshiftConsole')
   .controller('PodController', function ($scope, $routeParams, DataService, project, $filter, ImageStreamResolver) {
     $scope.pod = null;
+    $scope.metricsEnabled = false;
     $scope.imageStreams = {};
     $scope.imagesByDockerReference = {};
     $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
@@ -75,6 +76,11 @@ angular.module('openshiftConsole')
         Logger.log("builds (subscribe)", $scope.builds);
       }));      
     });
+
+    $scope.changeToMetrics = function(v) {
+      $scope.metricsEnabled = v;
+      console.log($scope.metricsEnabled);
+    };
 
     $scope.$on('$destroy', function(){
       DataService.unwatchAll(watches);

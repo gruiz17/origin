@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>Metrics for {{pod.metadata.name}}</h1>
+    <div ng-if="loading">
+      <div class="tile">
+        <i class="fa fa-spinner fa-spin fa-lg"></i>
+        <span> Loading metrics...</span>
+      </div>
+    </div>
+
+    <div ng-if="!loading">
+      <div ng-repeat="dataObj in dataPoints">
+        <div ng-if="!dataObj.error">
+          <div class="tile">
+            <h3>{{dataObj.name}}</h3>
+            <canvas class="chart chart-line"
+              chart-data="dataPoints[$index].data" 
+              chart-labels="dataPoints[$index].labels"
+              chart-options="chartOptions"></canvas>
+          </div>
+        </div>
+        <div ng-if="dataObj.error">
+          <div class="tile">
+            <h3>{{dataObj.name}}</h3>
+            <p>Error while getting {{dataObj.name}} :(</p>
+            <p>Reason: {{dataObj.reason}} <strong>(Status code: {{dataObj.status}})</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /row -->

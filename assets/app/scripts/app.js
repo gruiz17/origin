@@ -19,7 +19,8 @@ angular
     'ngTouch',
     'openshiftUI',
     'kubernetesUI',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'chart.js'
   ])
   .constant("mainNavTabs", [])  // even though its not really a "constant", it has to be created as a constant and not a value
                          // or it can't be referenced during module config
@@ -159,6 +160,9 @@ angular
       })
       .when('/project/:project/browse/pods/:pod', {
         templateUrl: 'views/browse/pod.html'
+      })
+      .when('/project/:project/browse/pods/:pod/metrics', {
+        templateUrl: 'views/browse/metrics.html'
       })
       .when('/project/:project/browse/services', {
         templateUrl: 'views/services.html'

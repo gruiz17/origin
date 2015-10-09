@@ -3,6 +3,22 @@
     <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
     <alerts alerts="alerts"></alerts>
     <div ng-if="pod">
+      <ul class="nav nav-tabs">
+        <li ng-click="changeToMetrics(false);">
+          <a href="#">
+            Pod Info
+          </a>
+        </li>
+        <li ng-click="changeToMetrics(true);">
+          <a href="#">
+            Metrics
+          </a>
+        </li>
+      </ul>
+      <div ng-if="metricsEnabled">
+      <metrics pod="pod"></metrics>
+      </div>
+      <div ng-if="!metricsEnabled">
       <div class="row">
         <div class="col-md-12">
           <div class="tile">
@@ -79,6 +95,7 @@
           </div>
         </div>
       </div><!-- /row -->
+      </div>
     </div>
   </project-page>
 </div>
