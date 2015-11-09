@@ -51,9 +51,35 @@
             <a href="http://docs.openshift.org/latest/welcome/index.html" style="padding-top:20px;padding-bottom:20px">
             <span class="fa fa-files-o fa-fw"></span> Documentation</a>
           </li>
-          <li style="height:100%" class="dropdown" ng-if="user">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;padding-bottom:20px">
-              <span class="pficon pficon-user" style="padding-top:12px;"></span>
+          <li class="dropdown" regions ng-if="!loading && showRegions">
+            <a ng-if="loading"><span class="fa fa-spinner fa-spin"></span> Loading Regions</a>
+
+            <a ng-if="!loading" href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-globe"></i>
+              <span class="username">Regions</span> <b class="caret"></b>
+            </a>
+            <ul ng-if="!loading" class="dropdown-menu">
+              <li ng-repeat="region in regions">
+                <a href="{{region.url}}">{{region.name}}</a>
+              </li>
+            </ul>
+            <!-- </span> -->
+          </li>
+          <li class="dropdown" regions ng-if="loading">
+            <span class="fa fa-spinner fa-spin"></span> Loading Regions
+          </li>
+
+          <li>
+            <a href="http://docs.openshift.org/latest/welcome/index.html">
+            <span class="fa fa-files-o fa-fw"></span> Documentation</a>
+          </li>
+
+          <!-- <regions></regions> -->
+
+
+          <li class="dropdown" ng-if="user">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="pficon pficon-user"></span>
               <span class="username">{{user.fullName || user.metadata.name}}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu" style="top:100%">
@@ -71,6 +97,8 @@
               </li>
             </ul>
           </li>
+
+
         </ul>
       </div>
     </nav>
@@ -209,6 +237,7 @@
         <script src="scripts/directives/popups.js"></script>
         <script src="scripts/directives/util.js"></script>
         <script src="scripts/directives/labels.js"></script>
+        <script src="scripts/directives/regions.js"></script>
         <script src="scripts/directives/templateopt.js"></script>
         <script src="scripts/directives/tasks.js"></script>
         <script src="scripts/directives/truncate.js"></script>
