@@ -1,0 +1,12 @@
+
+  <a ng-if="regionsLoading" style="color:#cfcfcf;height:100%;"><span class="fa fa-spinner fa-spin"></span> Loading Regions</a>
+
+  <a ng-if="!regionsLoading" href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:#cfcfcf;height:100%;">
+    <i class="fa fa-globe"></i>
+    <span>Regions</span> <b class="caret"></b>
+  </a>
+  <ul ng-if="!regionsLoading" class="dropdown-menu">
+    <li ng-repeat="region in regions">
+      <a href="{{region.url}}">{{region.name}}</a>
+    </li>
+  </ul>

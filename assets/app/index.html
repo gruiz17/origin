@@ -33,7 +33,7 @@
   </head>
 <body class="console-os">
     <!-- Add your site or application content here -->
-    <nav class="navbar navbar-default navbar-pf" role="navigation">
+    <nav class="navbar navbar-default navbar-pf navbar-utility" role="navigation">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
           <span class="sr-only">Toggle navigation</span>
@@ -47,39 +47,24 @@
       </div>
       <div class="collapse navbar-collapse navbar-collapse-1">  
         <ul class="nav navbar-nav navbar-utility" style="height:100%">
+          <li class="dropdown" style="height:100%;padding-top:15px;padding-bottom:15px;font-size:12px;margin-right:2px;color: #cfcfcf">
+          <regions>
+          </regions>
+          </li>
           <li style="height:100%">
-            <a href="http://docs.openshift.org/latest/welcome/index.html" style="padding-top:20px;padding-bottom:20px">
-            <span class="fa fa-files-o fa-fw"></span> Documentation</a>
-          </li>
-          <li class="dropdown" regions ng-if="!loading && showRegions">
-            <a ng-if="loading"><span class="fa fa-spinner fa-spin"></span> Loading Regions</a>
-
-            <a ng-if="!loading" href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-globe"></i>
-              <span class="username">Regions</span> <b class="caret"></b>
-            </a>
-            <ul ng-if="!loading" class="dropdown-menu">
-              <li ng-repeat="region in regions">
-                <a href="{{region.url}}">{{region.name}}</a>
-              </li>
-            </ul>
-            <!-- </span> -->
-          </li>
-          <li class="dropdown" regions ng-if="loading">
-            <span class="fa fa-spinner fa-spin"></span> Loading Regions
-          </li>
-
-          <li>
-            <a href="http://docs.openshift.org/latest/welcome/index.html">
+            <a href="http://docs.openshift.org/latest/welcome/index.html" style="padding-top:18.2px;padding-bottom:18.2px">
             <span class="fa fa-files-o fa-fw"></span> Documentation</a>
           </li>
 
           <!-- <regions></regions> -->
 
 
-          <li class="dropdown" ng-if="user">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="pficon pficon-user"></span>
+          <li class="dropdown" ng-if="user" style="height:100%">
+            <a href="#" 
+            class="dropdown-toggle" 
+            data-toggle="dropdown"
+            style="padding-top:18.2px;padding-bottom:18.2px">
+              <span class="pficon pficon-user" style="padding-top:10px;"></span>
               <span class="username">{{user.fullName || user.metadata.name}}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu" style="top:100%">
@@ -173,6 +158,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/services/sympaas.js"></script>
         <script src="scripts/services/logger.js"></script>
         <script src="scripts/services/ws.js"></script>
         <script src="scripts/services/userstore.js"></script>
@@ -210,6 +196,7 @@
         <script src="scripts/controllers/deployment.js"></script>
         <script src="scripts/controllers/services.js"></script>
         <script src="scripts/controllers/service.js"></script>
+        <script src="scripts/controllers/scalr.js"></script>
         <script src="scripts/controllers/routes.js"></script>
         <script src="scripts/controllers/route.js"></script>
         <script src="scripts/controllers/create/createFromImage.js"></script>

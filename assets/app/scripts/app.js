@@ -85,6 +85,16 @@ angular
     tab.icon = "sliders";
     tabs.push(tab);
 
+    tab = builder.create()
+     .id(builder.join(pluginName, "scalr"))
+     .title(function () { return "Clustered Services"; })
+     .template(template)
+     .href(projectHref("scalr"))
+     .page(function () { return builder.join(templatePath, 'scalr.html'); })
+     .build();
+    tab.icon = "database";
+    tabs.push(tab);
+
   }])
   .config(function ($routeProvider) {
     $routeProvider
@@ -199,6 +209,9 @@ angular
       })
       .when('/project/:project/create/next', {
         templateUrl: 'views/create/nextSteps.html'
+      })
+      .when('/project/:project/scalr', {
+        templateUrl: 'views/scalr.html'
       })
       .when('/oauth', {
         templateUrl: 'views/util/oauth.html',
