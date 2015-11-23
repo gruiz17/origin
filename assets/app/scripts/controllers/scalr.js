@@ -12,36 +12,146 @@
 // NOT KUBERNETES COMPONENT
 
 angular.module('openshiftConsole')
-  .controller('ScalrController', function ($scope, DataService, AlertMessageService, ngScalr, $filter, $modal, $location, LabelFilter, $timeout, Logger) {
+  .service('SymPaas', function($http, $q, $log, API_CFG, AuthService) {
+    function Paas() {
+
+    }
+
+    var token = AuthService.UserStore().getToken() || '';
+
+    var baseURL = function() {
+      var protocol = 'http';
+      var hostPort = API_CFG.openshift.hostPort.slice(0, API_CFG.openshift.hostPort.length - 4) + '8080';
+      return new URI({protocol: protocol, hostname: hostPort}).toString();
+    };
+
+    var methodsCheck = {
+      'noParams': new Set(['regions']),
+      'scalr': {
+        'get': {
+          'methods': new Set(['listFarms'])
+        },
+        'post': {
+          'methods': {
+            'launchFarm': new Set(['ID']),
+            'cloneFarm': new Set(['ID']),
+            'terminateFarm': new Set(['ID'])
+          }
+        }
+      }
+    };
+
+    var sequences = {
+      'scalr': {
+        'launchFarm': ['ID'],
+        'cloneFarm': ['ID'],
+        'terminateFarm': ['ID'] 
+      }
+    };
+
+    var buildUrl = function(type, action) {
+      if (methodsCheck['noParams'].has(type)) {
+        return baseURL() + '/' + type;
+      }
+      else {
+        return baseURL() + '/' + type + '/' + action;
+      }
+    };
+
+    var placeParams = function(url, type, action, params) {
+      var updatedUrl = url;
+      sequences[type][action].forEach(function(param) {
+        updatedUrl += '/' + params[param];
+      });
+      return updatedUrl;
+    };
+
+    Paas.prototype.call = function(type, action, params) {
+      var builtUrl = buildUrl(type, action);
+      var deferred = $q.defer();
+      if (typeof action !== 'undefined' && typeof methodsCheck[type]['post']['methods'][action] !== 'undefined') {
+        $http.post(placeParams(builtUrl, type, action, params), {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }).success(function(data, status, headerFunc, config, statusText) {
+          deferred.resolve(data);
+        }).error(function(data, status, headers, config) {
+          deferred.reject({
+            data: data,
+            status: status,
+            headers: headers,
+            config: config
+          });
+        });
+      }
+
+      else {
+        $http.get(builtUrl, {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }).success(function(data, status, headerFunc, config, statusText) {
+          deferred.resolve(data);
+        }).error(function(data, status, headers, config) {
+          deferred.reject({
+            data: data,
+            status: status,
+            headers: headers,
+            config: config
+          });      
+        });
+      }
+      return deferred.promise;
+    };
+
+    return new Paas();
+  })
+  .controller('ScalrController', function ($scope, SymPaas, DataService, AlertMessageService, $filter, $modal, $location, LabelFilter, $timeout, $window, Logger) {
     $scope.alerts = $scope.alerts || {};
 
     var watches = [];
-    $scope.hehe = {};
-    $scope.loaded = false;
+
     $scope.farms = [];
-
-
-    $scope.launching = false;
+    $scope.loading = true;
+    $scope.loaded = false;
 
     $scope.operating = {};
 
-    var callDetail = function(farm) {
-      $scope.operating[parseInt(farm['ID'])] = false;
-      ngScalr.call('farm', 'get', {'FarmID': farm['ID']}).then(function(returnedFarm) {
-        returnedFarm.ID = parseInt(returnedFarm.ID, 10);
-        $scope.farms.push(returnedFarm);
-      }).catch(errorMessage('get')).finally(function() {
+    var listFarms = function() {
+      SymPaas.call('scalr', 'listFarms').then(function(farms) {
+        $scope.farms = farms.map(function(farm) {
+          var tmpFarm = farm;
+          tmpFarm.ID = $window.parseInt(tmpFarm.ID, 10);
+          return tmpFarm;
+        });
+      }).catch(function(err) {
+        errorMessage('list');
+      }).finally(function() {
+        $scope.loading = false;
         $scope.loaded = true;
       });
     };
 
-    var errorMessage = function(method) {
+    listFarms();
+
+    $scope.operateOnFarm = function(id, action) {
+      $scope.operating[id] = true;
+      SymPaas.call('scalr', action, {ID: id}).then(function() {
+        listFarms();
+      }).catch(function(err) {
+        errorMessage(action);
+      }).finally(function() {
+        $scope.operating[id] = false;
+      });
+    };
+
+    function errorMessage(method) {
       var errorMap = {
-        'list': 'Error occurred while getting farms',
-        'get': 'Error occurred while getting farm detail',
-        'launch': 'Error occurred while launching farm',
-        'terminate': 'Error occurred while terminating a farm',
-        'clone': 'Error occurred while cloning this farm'
+        'listFarms': 'Error occurred while getting farms',
+        'launchFarm': 'Error occurred while launching this farm',
+        'terminateFarm': 'Error occurred while terminating this farm',
+        'cloneFarm': 'Error occurred while cloning this farm'
       };
       return function(error) {
         $scope.alerts['scalr'] = {
@@ -51,79 +161,8 @@ angular.module('openshiftConsole')
         };
         Logger.error("Farms could not be fetched.", error);
       };
-    };
-
-    ngScalr.call('farm', 'list').then(function(res) {
-      if (!res || res['FarmSet'].length === 0) {
-        $scope.noFarms = true;
-      }
-      else {
-        if (res['FarmSet']['Item'].constructor === Array) {
-          res['FarmSet']['Item'].forEach(callDetail);
-        }
-        else {
-          callDetail(res['FarmSet']['Item']);
-        }
-      }
-    }).catch(errorMessage('list')).finally(function() {
-      $scope.loaded = true;
-    });
-
-    // for cloning farms
-    $scope.cloneFarm = function(farm) {
-      $scope.operating[farm.ID] = true;
-      ngScalr.call('farm', 'clone', {'FarmID': farm['ID']}).then(function(retFarm) {
-        callDetail(retFarm);
-      }).catch(errorMessage('clone')).finally(function() {
-        $scope.operating[farm.ID] = false;
-      });
-    };
-
-    // for terminating farms
-    $scope.terminateFarm = function(farm) {
-      $scope.operating[farm.ID] = true;
-      ngScalr.call('farm', 'terminate', {
-        'FarmID': farm['ID'],
-        'KeepEBS': 1,
-        'KeepEIP': 1,
-        'KeepDNSZone': 1
-      }).then(function() {
-        $scope.farms.splice($scope.farms.indexOf(farm), 1);
-        callDetail(farm);
-      }).catch(errorMessage('terminate')).finally(function() {
-        $scope.operating[farm.ID] = false;
-      });
-    };
-
-    // for launching farms
-    $scope.launchFarm = function(farm) {
-      $scope.operating[farm.ID] = true;
-      ngScalr.call('farm', 'launch', {'FarmID': farm['ID']}).then(function() {
-        $scope.farms.splice($scope.farms.indexOf(farm), 1);
-        callDetail(farm);
-      }).catch(errorMessage('launch')).finally(function() {
-        $scope.operating[farm.ID] = false;
-      });
-    };
-
-    $scope.isArrayOrObjectOrEmpty = function(item) {
-      if (item.length === 0) {
-        return 'empty';
-      }
-      else {
-        if (item['Item'].constructor === Array) {
-          return 'array';
-        }
-        else if (item['Item'].constructor === Object) {
-          return 'object';
-        }
-      }
-    };
-
-    $scope.testCall = function() {
-      $scope.farms[0].Name = 'cock';
-    };
-
+    }
+ 
     $scope.$on('$destroy', function(){
       DataService.unwatchAll(watches);
     });

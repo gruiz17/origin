@@ -18,7 +18,6 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngScalr',
     'openshiftUI',
     'kubernetesUI',
     'ui.bootstrap'

@@ -2,7 +2,7 @@
   <project-page>
     <div ng-controller="ScalrController">
       <div class="page-header page-header-bleed-right">
-        <h1 ng-click="testCall();">Clustered Services</h1>
+        <h1 ng-click="cock();">Clustered Services</h1>
       </div>
       <div>
         <alerts alerts="alerts"></alerts>
@@ -11,94 +11,52 @@
           <i class="fa fa-spinner fa-spin fa-2x"></i>
         </div>
         <div ng-if="loaded && !noFarms">
-          <div ng-repeat="farm in farms | orderBy:'ID'" class="tile">
+          <div ng-repeat="farm in farms | orderBy: 'ID'" class="tile">
             <h3>{{farm.Name}}
-              <div ng-if="!operating[farm.ID]" ng-click="cloneFarm(farm)" class="pull-right btn btn-default"><i class="fa fa-lg fa-copy"></i>  Clone Farm
+              <div ng-if="!operating[farm.ID]" ng-click="operateOnFarm(farm)" class="pull-right btn btn-default"><i class="fa fa-lg fa-copy"></i>  Clone Farm
               </div>
               <div ng-if="operating[farm.ID]"><i class="pull-right fa fa-spinner fa-spin fa-2x"></i></div>
             </h3>
 
             <h4>Farm ID: {{farm.ID}}
-              <div ng-if="farm.Farm.Status === '0' && !operating[farm.ID]" class="pull-right btn btn-primary" style="" ng-click="launchFarm(farm)"><i class="fa fa-power-off"></i>  Launch Farm</div>
-              <div ng-if="farm.Farm.Status === '1' && !operating[farm.ID]" class="pull-right btn btn-danger" style="" ng-click="terminateFarm(farm)"><i class="fa fa-power-off"></i>  Terminate Farm</div>
+              <div ng-if="farm.Status === '0' && !operating[farm.ID]" class="pull-right btn btn-primary" style="" ng-click="operateOnFarm(farm)"><i class="fa fa-power-off"></i>  Launch Farm</div>
+              <div ng-if="farm.Status === '1' && !operating[farm.ID]" class="pull-right btn btn-danger" style="" ng-click="operateOnFarm(farm)"><i class="fa fa-power-off"></i>  Terminate Farm</div>
             </h4>
 
-            <h4><i class="fa fa-power-off"></i> Status: <span ng-if="farm.Farm.Status === '1'" style="background-color:#dff0d8;border-radius: 25px;padding-top:3px;padding-bottom:3px;padding-left:6px;padding-right:6px;">running</span>
-            <span ng-if="farm.Farm.Status === '0'" style="background-color:#f5f5f5;border-radius: 25px;padding-top:3px;padding-bottom:3px;padding-left:6px;padding-right:6px;">terminated</span></h4>
+            <h4><i class="fa fa-power-off"></i> Status: <span ng-if="farm.Status === '1'" style="background-color:#dff0d8;border-radius: 25px;padding-top:3px;padding-bottom:3px;padding-left:6px;padding-right:6px;">Running</span>
+            <span ng-if="farm.Status === '0'" style="background-color:#f5f5f5;border-radius: 25px;padding-top:3px;padding-bottom:3px;padding-left:6px;padding-right:6px;">Terminated</span></h4>
             <hr>
-            <h4>Roles:</h4> 
-            <div ng-switch on="isArrayOrObjectOrEmpty(farm.FarmRoleSet)">
-              <div ng-switch-when="empty">
-                none
-              </div>
+            <h4>Roles:</h4>
+            <div ng-repeat="role in farm.roles" class="well">
+              <div>Name: <strong>{{role.Name}}</strong></div>
+              <div><i class="fa fa-tasks"></i> Servers:</div>
 
+              <div ng-switch on="isArrayOrObjectOrEmpty(role.ServerSet)">
+                <div ng-switch-when="empty">
+                  none
+                </div>
 
-              <div ng-switch-when="array">
-                <div ng-repeat="role in farm.FarmRoleSet.Item" class="well col-md-4">
-                  <div>Name: <strong>{{role.Name}}</strong></div>
-                  <div><i class="fa fa-tasks"></i> Servers:</div>
-
-                  <div ng-switch on="isArrayOrObjectOrEmpty(role.ServerSet)">
-                    <div ng-switch-when="empty">
-                      none
-                    </div>
-
-                    <div ng-switch-when="array">
-                      <div ng-repeat="server in role.ServerSet.Item">
-                        IP: {{server.PublicIP}} -> {{server.Status}}
-                      </div>
-                    </div>
-
-                    <div ng-switch-when="object">
-                      <div>
-                        IP: {{role.ServerSet.Item.PublicIP}} -> {{role.ServerSet.Item.Status}}
-                      </div>
-                    </div>
-                    <div ng-switch-default>
-                      none
-                    </div>
+                <div ng-switch-when="array">
+                  <div ng-repeat="server in role.ServerSet.Item">
+                    IP: {{server.PublicIP}} -> {{server.Status}}
                   </div>
+                </div>
 
-                </div> 
-              </div>
-
-              <div ng-switch-when="object">
-                <div class="well col-md-4">
-                  <div>Name: <strong>{{farm.FarmRoleSet.Item.Name}}</strong></div>
-                  <div><i class="fa fa-tasks"></i> Servers:</div>
-
-                  <div ng-switch on="isArrayOrObjectOrEmpty(farm.FarmRoleSet.Item.ServerSet)">
-                    <div ng-switch-when="empty">
-                      none
-                    </div>
-
-                    <div ng-switch-when="array">
-                      <div ng-repeat="server in farm.FarmRoleSet.Item.ServerSet.Item">
-                        IP: {{server.PublicIP}} -> {{server.Status}}
-                      </div>
-                    </div>
-
-                    <div ng-switch-when="object">
-                      <div>
-                        IP: {{farm.FarmRoleSet.Item.ServerSet.Item.PublicIP}} -> {{farm.FarmRoleSet.Item.ServerSet.Item.Status}}
-                      </div>
-                    </div>
-                    <div ng-switch-default>
-                      none
-                    </div>
+                <div ng-switch-when="object">
+                  <div>
+                    IP: {{role.ServerSet.Item.PublicIP}} -> {{role.ServerSet.Item.Status}}
                   </div>
-
+                </div>
+                <div ng-switch-default>
+                  none
                 </div>
               </div>
 
-              <div ng-switch-default>
-                none
-              </div>
-            </div>
+            </div> 
           </div>
         </div>
 
-        <div class="text-center" ng-if="loaded && noFarms">
+        <div class="text-center" ng-if="loaded && farms.length === 0">
           <div>
             There are no farms available!
           </div>
