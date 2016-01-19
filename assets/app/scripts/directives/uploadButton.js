@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .directive("uploadButton", function ($filter, DataService, Logger) {
+  .directive("uploadButton", function ($filter, DataService, AuthService, Logger) {
     return {
       restrict: "E",
       scope: {

@@ -215,12 +215,15 @@ angular.module('openshiftConsole')
     opts = opts || {};
     var deferred = $q.defer();
     var self = this;
+    console.log(token);
     this._getNamespace(resource, context, opts).then(function(ns){
+      console.log('url is ' + self._urlForResource(resource, null, null, context, false, ns));
       Upload.http({
         method: 'POST',
         headers: {
           'Content-Type': file.type
         },
+        auth: {},
         data: file,
         url: self._urlForResource(resource, null, null, context, false, ns)
       })
